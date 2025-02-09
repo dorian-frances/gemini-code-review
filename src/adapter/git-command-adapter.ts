@@ -28,6 +28,5 @@ export function getBranches(): string[] {
 }
 
 export function getGitDiff(branch: string): string {
-  console.log(branch);
   return runGitCommand(`git diff main..${branch}`);
 }
