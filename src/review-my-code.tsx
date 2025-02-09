@@ -1,9 +1,9 @@
-import { Action, ActionPanel, Detail, List, showToast, Toast } from "@raycast/api";
+import { Detail, showToast, Toast } from "@raycast/api";
 import { useCachedState, useFetch } from "@raycast/utils";
 import { GEMINI_API_KEY } from "./adapter/gemini-adapter";
 import { GenerateContentResponse } from "@google/generative-ai";
 import { useEffect, useState } from "react";
-import { getBranches, getGitDiff } from "./adapter/git-command-adapter";
+import { getGitDiff } from "./adapter/git-command-adapter";
 import { format } from "./core/string-utils";
 import { BranchSelection, BranchSelectionForm } from "./components/BranchSelectionForm";
 
@@ -18,16 +18,15 @@ function getBranchDiffAndHandleError(branchSelectionState: BranchSelection): str
       title: "Error while fetching diff between current branch and target branch",
       message: "Make sure the selected branches exists",
     });
+    throw new Error("Error while fetching diff between current branch and target branch")
   }
 }
 
 export default function Command() {
-  const [branches, setBranches] = useCachedState<string[]>("local-branches", []);
-  const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
   const [modelRecommendation, setModelRecommendation] = useState<string>("")
   const [requestBody, setRequestBody] = useState<string | null>(null);
   const [loadingReview, setLoadingReview] = useState<boolean>(false);
-  const [branchSelectionState, setBranchSelectionState] = useCachedState<BranchSelection>("branche-selection-state")
+  const [branchSelectionState] = useCachedState<BranchSelection>("branch-selection-state")
   const { error, revalidate } = useFetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
     {
@@ -57,20 +56,6 @@ export default function Command() {
       },
     },
   );
-
-  useEffect(() => {
-    try {
-      const branchList = getBranches();
-      setBranches(branchList);
-    } catch (error) {
-      console.log(error);
-      showToast({
-        style: Toast.Style.Failure,
-        title: "Error fetching branches",
-        message: "Make sure you are inside a Git repo.",
-      });
-    }
-  }, []);
 
   useEffect(() => {
     if (requestBody) {

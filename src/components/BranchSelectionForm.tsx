@@ -1,5 +1,7 @@
-import { Action, ActionPanel, Form, List } from "@raycast/api";
+import { Action, ActionPanel, Form, List, showToast, Toast } from "@raycast/api";
 import { useCachedState } from "@raycast/utils";
+import { useEffect } from "react";
+import { getBranches } from "../adapter/git-command-adapter";
 
 export type BranchSelection = {
   currentBranch: string;
@@ -12,10 +14,24 @@ type Props = {
 
 export function BranchSelectionForm({onSubmit}: Props) {
   const [branches, setBranches] = useCachedState<string[]>("local-branches", []);
-  const [branchSelectionState, setBranchSelectionState] = useCachedState<BranchSelection>("branche-selection-state", {
+  const [branchSelectionState, setBranchSelectionState] = useCachedState<BranchSelection>("branch-selection-state", {
     currentBranch: "",
     targetBranch: "main"
   })
+
+  useEffect(() => {
+    try {
+      const branchList = getBranches();
+      setBranches(branchList);
+    } catch (error) {
+      console.log(error);
+      showToast({
+        style: Toast.Style.Failure,
+        title: "Error fetching branches",
+        message: "Make sure you are inside a Git repository.",
+      });
+    }
+  }, []);
 
   return <Form actions={
     <ActionPanel>

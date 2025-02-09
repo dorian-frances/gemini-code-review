@@ -15,14 +15,6 @@ export function runGitCommand(command: string): string {
   }
 }
 
-export function getCurrentBranch() {
-  try {
-    return runGitCommand("git branch --show-current");
-  } catch (error) {
-    return `🔴 Error getting curent branch`;
-  }
-}
-
 export function getBranches(): string[] {
   return runGitCommand("git branch --format='%(refname:short)'").split("\n");
 }
