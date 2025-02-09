@@ -23,9 +23,9 @@ function getBranchDiffAndHandleError(branchSelectionState: BranchSelection): str
 }
 
 export default function Command() {
-  const [modelRecommendation, setModelRecommendation] = useState<string>("")
+  const [modelReview, setModelReview] = useState<string>("")
+  const [loadingModelReview, setLoadingModelReview] = useState<boolean>(false);
   const [requestBody, setRequestBody] = useState<string | null>(null);
-  const [loadingReview, setLoadingReview] = useState<boolean>(false);
   const [branchSelectionState] = useCachedState<BranchSelection>("branch-selection-state")
   const { error, revalidate } = useFetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
@@ -35,24 +35,24 @@ export default function Command() {
       body: requestBody,
       execute: false,
       onWillExecute: () => {
-        setModelRecommendation("⏳ Fetching model recommandation...")
-        setLoadingReview(true);
+        setModelReview("⏳ Fetching model recommandation...")
+        setLoadingModelReview(true);
       },
       onData: (data: GenerateContentResponse) => {
         if (data !== undefined) {
           const candidateResponse = data.candidates?.at(0);
           if (candidateResponse !== undefined) {
-            setModelRecommendation(candidateResponse.content.parts[0].text ?? "Aucune réponse obtenue.")
-            setLoadingReview(false);
+            setModelReview(candidateResponse.content.parts[0].text ?? "Aucune réponse obtenue.")
+            setLoadingModelReview(false);
             return;
           }
         }
-        setModelRecommendation("Aucune réponse obtenue.")
-        setLoadingReview(false);
+        setModelReview("Aucune réponse obtenue.")
+        setLoadingModelReview(false);
       },
       onError: (error)=> {
         console.log(error);
-        setLoadingReview(false)
+        setLoadingModelReview(false)
       },
     },
   );
@@ -81,8 +81,8 @@ export default function Command() {
     return <Detail markdown="### ❌ Une erreur est survenue lors de la récupération des données." />;
   }
 
-  if (modelRecommendation !== "" && branchSelectionState)  {
-    return <Detail isLoading={loadingReview} markdown={`# Code review from Gemini for branch \`${branchSelectionState.currentBranch}\`\n${modelRecommendation}`} />;
+  if (modelReview !== "" && branchSelectionState)  {
+    return <Detail isLoading={loadingModelReview} markdown={`# Code review from Gemini for branch \`${branchSelectionState.currentBranch}\`\n${modelReview}`} />;
   }
 
   return <BranchSelectionForm onSubmit={() => triggerModelRecommendation()}/>
