@@ -27,6 +27,6 @@ export function getBranches(): string[] {
   return runGitCommand("git branch --format='%(refname:short)'").split("\n");
 }
 
-export function getGitDiff(branch: string): string {
-  return runGitCommand(`git diff main..${branch}`);
+export function getGitDiff(currentBranch: string, targetBranch: string): string {
+  return runGitCommand(`git diff ${targetBranch}..${currentBranch}`);
 }
