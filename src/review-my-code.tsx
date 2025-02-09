@@ -12,7 +12,6 @@ export const prompt = "Given the following Git diff between a developer's branch
 export default function Command() {
   const [branches, setBranches] = useCachedState<string[]>("local-branches", []);
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
-  const [diff, setDiff] = useState<string>("Select a branch to see the diff");
   const [modelRecommendation, setModelRecommendation] = useState<string>("")
   const [requestBody, setRequestBody] = useState<string | null>(null);
   const [loadingReview, setLoadingReview] = useState<boolean>(false);
@@ -69,7 +68,6 @@ export default function Command() {
   function handleBranchSelection(branch: string) {
     const diffResult = getGitDiff(branch);
     setSelectedBranch(branch);
-    setDiff(diffResult || "No changes found.");
     setRequestBody(JSON.stringify({
       contents: [
         {
