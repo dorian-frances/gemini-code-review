@@ -20,6 +20,7 @@
     }
   ],
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "@raycast/api": "^1.91.1",
     "@raycast/utils": "^1.17.0"
   },
