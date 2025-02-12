@@ -1,13 +1,14 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "gemini-code-review",
-  "title": "Gemini Code Review",
+  "name": "gemini-review",
+  "title": "Gemini Review",
   "description": "An AI boosted assistant that helps you review your code locally before asking for real \"human\" code review",
-  "icon": "gemini-code-review.png",
+  "icon": "gemini-review.png",
   "author": "dorian_frances",
   "owner": "dfrances-pro",
   "categories": [
-    "Developer Tools"
+    "Developer Tools",
+    "Productivity"
   ],
   "license": "MIT",
   "preferences": [
@@ -24,8 +25,8 @@
     {
       "name": "review-my-code",
       "title": "Review My Code",
-      "subtitle": "Ask for advice on the current changes of my code",
-      "description": "",
+      "subtitle": "Compare two branches an get an AI-powered code review",
+      "description": "Effortlessly review the changes between two branches using Gemini AI. Perfect for pre-merge checks, refactoring evaluations, or quick branch comparisons.",
       "mode": "view"
     }
   ],
