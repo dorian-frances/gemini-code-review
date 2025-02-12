@@ -3,7 +3,7 @@
   "name": "gemini-code-review",
   "title": "Gemini Code Review",
   "description": "An AI boosted assistant that helps you review your code locally before asking for real \"human\" code review",
-  "icon": "extension-icon.png",
+  "icon": "gemini-code-review.png",
   "author": "dorian_frances",
   "owner": "dfrances-pro",
   "categories": [
@@ -13,7 +13,7 @@
   "commands": [
     {
       "name": "review-my-code",
-      "title": "Review my code",
+      "title": "Review My Code",
       "subtitle": "Ask for advice on the current changes of my code",
       "description": "",
       "mode": "view"

@@ -41,7 +41,6 @@ export function BranchSelectionForm({onSubmit}: Props) {
 
   function triggerBranchDetectionForRepository(repositoryPath: string) {
     try {
-      console.log("Je passe ici", repositoryPath);
       const branchList = getBranches(repositoryPath);
       setBranches(branchList);
     } catch (error) {
