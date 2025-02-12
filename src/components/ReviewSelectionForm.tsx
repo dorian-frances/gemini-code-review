@@ -18,7 +18,14 @@ export function ReviewSelectionForm({onSubmit}: Props) {
   const [repositories, setRepositories] = useCachedState<GitRepositoryWithPath[]>('cached-git-repositories', []);
   const [branches, setBranches] = useState<string[]>(["main"]);
   const [loadingRepositories, setLoadingRepositories] = useState<boolean>(true);
-  const [branchSelectionState, setBranchSelectionState] = useCachedState<BranchSelection>("branch-selection-state")
+  const [branchSelectionState, setBranchSelectionState] = useCachedState<BranchSelection>("branch-selection-state", {
+    repository: {
+      repositoryPath: "",
+      repositoryName: ""
+    },
+    currentBranch: "",
+    targetBranch: "main"
+  })
 
   useEffect(() => {
     async function fetchRepositories() {
