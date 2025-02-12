@@ -1,7 +1,7 @@
-import { Action, ActionPanel, Form, List, showToast, Toast } from "@raycast/api";
-import { useCachedState } from "@raycast/utils";
+import {Action, ActionPanel, Form, showToast, Toast} from "@raycast/api";
+import {useCachedState} from "@raycast/utils";
 import {useEffect, useState} from "react";
-import { getBranches } from "../adapter/git-command-adapter";
+import {getBranches} from "../adapter/git-command-adapter";
 import {detectGitRepositories, GitRepositoryWithPath} from "../adapter/git-repository-detection-adapter";
 
 export type BranchSelection = {
@@ -41,7 +41,6 @@ export function BranchSelectionForm({onSubmit}: Props) {
 
   function triggerBranchDetectionForRepository(repositoryPath: string) {
     try {
-      console.log("Je passe ici", repositoryPath);
       const branchList = getBranches(repositoryPath);
       setBranches(branchList);
     } catch (error) {

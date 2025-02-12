@@ -1,5 +1,5 @@
 import path from "node:path";
-import {exec, execSync} from "node:child_process";
+import {exec} from "node:child_process";
 import * as util from "node:util";
 
 const SEARCH_DIRS = [
