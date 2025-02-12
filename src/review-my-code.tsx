@@ -11,7 +11,7 @@ export const prompt = "Given the following Git diff between a developer's branch
 
 function getBranchDiffAndHandleError(branchSelectionState: BranchSelection): string {
   try {
-    return getGitDiff(branchSelectionState.currentBranch, branchSelectionState.targetBranch);
+    return getGitDiff(branchSelectionState.repository.repositoryPath, branchSelectionState.currentBranch, branchSelectionState.targetBranch);
   } catch (error) {
     showToast({
       style: Toast.Style.Failure,
@@ -26,7 +26,14 @@ export default function Command() {
   const [modelReview, setModelReview] = useState<string>("")
   const [loadingModelReview, setLoadingModelReview] = useState<boolean>(false);
   const [requestBody, setRequestBody] = useState<string | null>(null);
-  const [branchSelectionState] = useCachedState<BranchSelection>("branch-selection-state")
+  const [branchSelectionState] = useCachedState<BranchSelection>("branch-selection-state", {
+    repository: {
+      repositoryPath: "",
+      repositoryName: ""
+    },
+    currentBranch: "",
+    targetBranch: "main"
+  })
   const { error, revalidate } = useFetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
     {

@@ -1,11 +1,9 @@
 import { execSync } from "node:child_process";
 
-const GIT_REPO_PATH = "/Users/dorianfrances/Projects/gemini-code-review";
-
-export function runGitCommand(command: string): string {
+export function runGitCommand(repositoryPath: string, command: string): string {
   try {
     return execSync(command, {
-      cwd: GIT_REPO_PATH, // Ensure all commands run in this repo
+      cwd: repositoryPath,
       stdio: "pipe",
     })
       .toString()
@@ -15,10 +13,10 @@ export function runGitCommand(command: string): string {
   }
 }
 
-export function getBranches(): string[] {
-  return runGitCommand("git branch --format='%(refname:short)'").split("\n");
+export function getBranches(repositoryPath: string): string[] {
+  return runGitCommand(repositoryPath, "git branch --format='%(refname:short)'").split("\n");
 }
 
-export function getGitDiff(currentBranch: string, targetBranch: string): string {
-  return runGitCommand(`git diff ${targetBranch}..${currentBranch}`);
+export function getGitDiff(repositoryPath: string, currentBranch: string, targetBranch: string): string {
+  return runGitCommand(repositoryPath, `git diff ${targetBranch}..${currentBranch}`);
 }
