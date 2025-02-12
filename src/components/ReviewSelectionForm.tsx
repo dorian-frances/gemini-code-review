@@ -14,7 +14,7 @@ type Props = {
   readonly onSubmit: () => void;
 }
 
-export function BranchSelectionForm({onSubmit}: Props) {
+export function ReviewSelectionForm({onSubmit}: Props) {
   const [repositories, setRepositories] = useCachedState<GitRepositoryWithPath[]>('cached-git-repositories', []);
   const [branches, setBranches] = useState<string[]>(["main"]);
   const [loadingRepositories, setLoadingRepositories] = useState<boolean>(true);
