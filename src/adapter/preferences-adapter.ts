@@ -1,9 +1,9 @@
-import {getPreferenceValues} from "@raycast/api";
+import { getPreferenceValues } from "@raycast/api";
 
 type Preferences = {
-    geminiApiKey: string;
-}
+  geminiApiKey: string;
+};
 
 export function getPreferenceByValue(preference: keyof Preferences) {
-    return getPreferenceValues<Preferences>()[preference];
+  return getPreferenceValues<Preferences>()[preference];
 }
