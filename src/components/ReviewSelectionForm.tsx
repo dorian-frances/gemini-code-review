@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {getBranches} from "../adapter/git-command-adapter";
 import {detectGitRepositories, GitRepositoryWithPath} from "../adapter/git-repository-detection-adapter";
 
-export type BranchSelection = {
+export type ReviewParameters = {
   repository: GitRepositoryWithPath;
   currentBranch: string;
   targetBranch: string;
@@ -14,11 +14,18 @@ type Props = {
   readonly onSubmit: () => void;
 }
 
-export function BranchSelectionForm({onSubmit}: Props) {
+export function ReviewSelectionForm({onSubmit}: Props) {
   const [repositories, setRepositories] = useCachedState<GitRepositoryWithPath[]>('cached-git-repositories', []);
   const [branches, setBranches] = useState<string[]>(["main"]);
   const [loadingRepositories, setLoadingRepositories] = useState<boolean>(true);
-  const [branchSelectionState, setBranchSelectionState] = useCachedState<BranchSelection>("branch-selection-state")
+  const [reviewParameterState, setReviewParameterState] = useCachedState<ReviewParameters>("review-parameter-state", {
+    repository: {
+      repositoryPath: "",
+      repositoryName: ""
+    },
+    currentBranch: "",
+    targetBranch: "main"
+  })
 
   useEffect(() => {
     async function fetchRepositories() {
@@ -58,11 +65,11 @@ export function BranchSelectionForm({onSubmit}: Props) {
       <Action.SubmitForm title={"Submit"} onSubmit={onSubmit}/>
     </ActionPanel>
   } isLoading={loadingRepositories}>
-    <Form.Dropdown id={"repository"} title={"Repository to work on"} defaultValue={branchSelectionState?.repository?.repositoryName || ""} onChange={(newValue) => {
+    <Form.Dropdown id={"repository"} title={"Repository to work on"} defaultValue={reviewParameterState?.repository?.repositoryName || ""} onChange={(newValue) => {
       const repository = repositories.find((repository) => {
         return repository.repositoryName === newValue
       }) ?? {repositoryName: "", repositoryPath: ""}
-      if (branchSelectionState) setBranchSelectionState({...branchSelectionState, repository: repository})
+      if (reviewParameterState) setReviewParameterState({...reviewParameterState, repository: repository})
       triggerBranchDetectionForRepository(repository.repositoryPath);
     }} isLoading={loadingRepositories}>
       {(repositories ?? [])
@@ -71,15 +78,15 @@ export function BranchSelectionForm({onSubmit}: Props) {
       ))}
     </Form.Dropdown>
       <Form.Dropdown id={"local-branch"} title={"Current branch"} info={"The branch where lies the code you want to be reviewed"} onChange={(newValue) => {
-        if (branchSelectionState) setBranchSelectionState({...branchSelectionState, currentBranch: newValue})
+        if (reviewParameterState) setReviewParameterState({...reviewParameterState, currentBranch: newValue})
       }}>
         {(branches ?? [])
             .map((branch) => (
           <Form.Dropdown.Item key={branch} value={branch} title={branch} />
         ))}
       </Form.Dropdown>
-      <Form.Dropdown id={"target-branch"} title={"Target branch"} info={"The branch on which you reviewed code would be merged"} defaultValue={branchSelectionState?.targetBranch} onChange={(newValue) => {
-        if (branchSelectionState) setBranchSelectionState({...branchSelectionState, targetBranch: newValue})
+      <Form.Dropdown id={"target-branch"} title={"Target branch"} info={"The branch on which you reviewed code would be merged"} defaultValue={reviewParameterState?.targetBranch} onChange={(newValue) => {
+        if (reviewParameterState) setReviewParameterState({...reviewParameterState, targetBranch: newValue})
       }}>
         {branches.map((branch) => (
           <Form.Dropdown.Item key={branch} value={branch} title={branch} />
